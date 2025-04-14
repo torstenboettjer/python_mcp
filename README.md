@@ -2,9 +2,16 @@
 
 This repo adapt the installation procedure for the Python MCP CLI to NixOS using the [automatic shell activation](https://devenv.sh/automatic-shell-activation/) with devenv.sh and direnv. 
 
-## Development Environment
+## Installation
 
-Go onto github and prepare a python repository, clone the rope into a local folder. Within the local folder prepare the devevlopment environment
+Clone the repository
+
+```sh
+git clone https://github.com/chrishayuk/mcp-cli
+cd mcp-cli
+```
+
+Initialise devenv
 
 ```sh
 devenv init
@@ -41,54 +48,18 @@ Add the dotfiles to `.gitignore`
 echo -e ".direnv\n.envrc" >> .gitignore
 ```
 
-Initiliaze and activate the virtual environment, leaving the virtual environment with `deactivate`.
-
-```sh
-uv init && uv venv
-source .devenv/state/venv/bin/activate
-```
-
 Install dependencies
 
 ```sh
-uv add mcp anthropic python-dotenv
+uv sync --reinstall
 ```
 
-## Setup the API Key
-
-Next, we’ll need an Anthropic API key from the Anthropic Console, we create a .env file to store it:
+## Run the CLI using UV
 
 ```sh
-touch .env
+uv run mcp-cli --help
 ```
 
-Add the key to the .env file:
-
-```sh
-ANTHROPIC_API_KEY=<your key here>
-```
-
-Add .env to your .gitignore:
-
-```sh
-echo ".env" >> .gitignore
-```
-
-## Create the Client
-
-Create the client file
-
-```sh
-touch client.py
-```
-
-## Run the Client
-
-To run the client with a Python based MCP server
-
-```sh
-uv run client.py path/to/server.py
-```
 
 ## Links
 
