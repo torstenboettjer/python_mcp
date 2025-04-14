@@ -63,7 +63,7 @@ Install the client via pip
 pip install mcp-client-cli
 ```
 
-Create a ~/.llm/config.json file to configure your LLM and MCP servers
+Create a `~/.llm/config.json` file to configure your LLM and MCP servers
 
 ```sh{
   "systemPrompt": "You are an AI assistant helping a software engineer...",
