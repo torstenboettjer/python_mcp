@@ -1,6 +1,6 @@
-# Python MCP Client
+# MCP CLI
 
-This a simple example for a python based MCP server on NixOS. For this example, virtual environments rely on [automatic shell activation](https://devenv.sh/automatic-shell-activation/) using devenv.sh and direnv. 
+This repo adapt the installation procedure for the Python MCP CLI to NixOS using the [automatic shell activation](https://devenv.sh/automatic-shell-activation/) with devenv.sh and direnv. 
 
 ## Development Environment
 
