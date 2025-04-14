@@ -65,7 +65,7 @@ uv run mcp-cli --help
 
 ### Sources
 
-* [MCP CLI]([https://modelcontextprotocol.io/quickstart/client](https://github.com/chrishayuk/mcp-cli))
+* [MCP CLI](https://modelcontextprotocol.io/quickstart/client](https://github.com/chrishayuk/mcp-cli)
 
 ### Tools
 
