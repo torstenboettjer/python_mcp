@@ -65,7 +65,8 @@ uv run mcp-cli --help
 
 ### Sources
 
-* [MCP CLI](https://github.com/chrishayuk/mcp-cli)
+* [MCP CLI on GitHub](https://github.com/chrishayuk/mcp-cli)
+* [Alternative solution](https://github.com/adhikasp/mcp-client-cli)
 
 ### Tools
 
