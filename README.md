@@ -98,7 +98,7 @@ Create a `~/.llm/config.json` file to configure your LLM and MCP servers
 }
 ```
 
-## Run the CLI using UV
+## Run the CLI
 
 ```sh
 llm "What is the capital city of North Sumatra?"
