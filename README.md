@@ -1,6 +1,6 @@
 # MCP Server Prototype
 
-This repo provides a Python based prototype for a MCP server on NixOS. It relies on the [automatic shell activation](https://devenv.sh/automatic-shell-activation/) with devenv.sh and direnv. 
+This repo provides a Python based prototype for a MCP server on NixOS. It relies on the [automatic shell activation](https://devenv.sh/automatic-shell-activation/) with devenv.sh and direnv.
 
 ## Prepare a Repository
 
@@ -10,35 +10,33 @@ Create a repository on github, clone the it into a local folder. Within the loca
 devenv init
 ```
 
-Update the greet variable and add the following packages in  devenv.nix 
+Update the greet variable and add the following packages in  devenv.nix
 
-```sh
-  # https://devenv.sh/basics/
-  env.GREET = "MCP Prototype";
+```nix
+    # https://devenv.sh/basics/
+    env.GREET = "MCP Prototype";
 
-  # https://devenv.sh/packages/
-  packages = [
-    pkgs.nodejs
-  ];
+    # https://devenv.sh/packages/
+    packages = with pkgs; [
+    nodejs
+    python313Packages.gradio
+    ];
 ```
 
 Add the python environment parameter to `devenv.nix`
 
 ```nix
-  # Python environment
+# https://devenv.sh/languages/
   languages.python = {
     enable = true;
-    packages = [
-      pkgs.python313Packages.gradio
-    ];
+    package = pkgs.python313;
     venv.enable = true;
     venv.requirements = ''
       requests
       pip
       # torch
     '';
-    # venv.packages = [ pkgs.python39Packages.pip ];
-    # venv.packages = [ pkgs.python39Packages.pip ];
+    # venv.packages = [ pkgs.python313Packages.gradio ];
     uv.enable = true;
   };
 ```
@@ -47,6 +45,7 @@ After saving the devenv configuration python and uv should be available.
 
 ```sh
 python --version && uv --version
+pip show gradio
 ```
 
 Add the dotfiles to `.gitignore`

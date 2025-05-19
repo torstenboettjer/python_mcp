@@ -1,14 +1,28 @@
-{ pkgs, lib, config, inputs, ... }:
+{ pkgs, ... }:
 
 {
   # https://devenv.sh/basics/
-  env.GREET = "devenv";
+  env.GREET = "MCP Prototype";
 
   # https://devenv.sh/packages/
-  packages = [ pkgs.git ];
+  packages = with pkgs; [
+    nodejs
+    python313Packages.gradio
+  ];
 
   # https://devenv.sh/languages/
-  # languages.rust.enable = true;
+  languages.python = {
+    enable = true;
+    package = pkgs.python313;
+    venv.enable = true;
+    venv.requirements = ''
+      requests
+      pip
+      # torch
+    '';
+    # venv.packages = [ pkgs.python313Packages.gradio ];
+    uv.enable = true;
+  };
 
   # https://devenv.sh/processes/
   # processes.cargo-watch.exec = "cargo-watch";
