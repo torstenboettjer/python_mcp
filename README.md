@@ -13,32 +13,31 @@ devenv init
 Update the greet variable and add the following packages in  devenv.nix
 
 ```nix
-    # https://devenv.sh/basics/
-    env.GREET = "MCP Prototype";
+# https://devenv.sh/basics/
+env.GREET = "MCP Prototype";
 
-    # https://devenv.sh/packages/
-    packages = with pkgs; [
-    nodejs
-    python313Packages.gradio
-    ];
+# https://devenv.sh/packages/
+packages = with pkgs; [
+nodejs
+python313Packages.gradio
+python313Packages.mcp
+];
 ```
 
 Add the python environment parameter to `devenv.nix`
 
 ```nix
 # https://devenv.sh/languages/
-  languages.python = {
-    enable = true;
-    package = pkgs.python313;
-    venv.enable = true;
-    venv.requirements = ''
-      requests
-      pip
-      # torch
-    '';
-    # venv.packages = [ pkgs.python313Packages.gradio ];
-    uv.enable = true;
-  };
+languages.python = {
+enable = true;
+package = pkgs.python313;
+venv.enable = true;
+venv.requirements = ''
+    requests
+    pip
+'';
+uv.enable = true;
+};
 ```
 
 After saving the devenv configuration python and uv should be available.

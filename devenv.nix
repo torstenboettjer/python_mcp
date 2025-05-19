@@ -8,6 +8,7 @@
   packages = with pkgs; [
     nodejs
     python313Packages.gradio
+    python313Packages.mcp
   ];
 
   # https://devenv.sh/languages/
@@ -18,9 +19,7 @@
     venv.requirements = ''
       requests
       pip
-      # torch
     '';
-    # venv.packages = [ pkgs.python313Packages.gradio ];
     uv.enable = true;
   };
 
