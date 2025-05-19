@@ -1,6 +1,6 @@
-# MCP CLI
+# MCP Server Prototype
 
-This repo adapt the installation procedure for the Python MCP CLI to NixOS using the [automatic shell activation](https://devenv.sh/automatic-shell-activation/) with devenv.sh and direnv. 
+This repo provides a Python based prototype for a MCP server on NixOS. It relies on the [automatic shell activation](https://devenv.sh/automatic-shell-activation/) with devenv.sh and direnv. 
 
 ## Prepare a Repository
 
@@ -14,11 +14,10 @@ Update the greet variable and add the following packages in  devenv.nix
 
 ```sh
   # https://devenv.sh/basics/
-  env.GREET = "MCP CLI";
+  env.GREET = "MCP Prototype";
 
   # https://devenv.sh/packages/
   packages = [
-    pkgs.git
     pkgs.nodejs
   ];
 ```
@@ -29,8 +28,9 @@ Add the python environment parameter to `devenv.nix`
   # Python environment
   languages.python = {
     enable = true;
-    # https://devenv.sh/languages/python/
-    # packages = [ pkgs.python39Packages.pip ];
+    packages = [
+      pkgs.python313Packages.gradio
+    ];
     venv.enable = true;
     venv.requirements = ''
       requests
@@ -52,16 +52,10 @@ python --version && uv --version
 Add the dotfiles to `.gitignore`
 
 ```sh
-echo -e ".direnv\n.envrc" >> .gitignore
+echo -e ".envrc" >> .gitignore
 ```
 
 ## Setup
-
-Install the client via pip
-
-```sh
-pip install mcp-client-cli
-```
 
 Create a `~/.llm/config.json` file to configure your LLM and MCP servers
 
