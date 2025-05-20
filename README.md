@@ -1,5 +1,4 @@
-# MCP Server Prototype
-
+# MCP Server in Python
 This repo provides a Python based prototype for a MCP server on NixOS. It relies on the [automatic shell activation](https://devenv.sh/automatic-shell-activation/) with devenv.sh and direnv.
 
 ## Prepare a Repository
@@ -59,17 +58,19 @@ Add the dotfiles to `.gitignore`
 echo -e ".envrc" >> .gitignore
 ```
 
-## Run MCP inspector
+## FastMCP
+
+### MCP inspector
 
 ```sh
 mcp dev server.py
 ```
 
-## Hugging Face Models
+## Gradio
 
 Hugging Face is a resource for pre-trained LLMs. Gradio offers several ways to integrate with them:
 
-### a. Using `gr.load()` for Hugging Face Inference Endpoints
+#### Using `gr.load()` for Hugging Face Inference Endpoints
 
 This is the **easiest and often recommended way** if the model is available on the Hugging Face Hub and supports inference endpoints, not need to download the model locally.
 
@@ -84,7 +85,7 @@ demo.launch()
   * `"Helsinki-NLP/opus-mt-en-es"` is the model ID on Hugging Face.
   * `src="models"` tells Gradio to look for this model on the Hugging Face Model Hub and use its inference endpoint. Gradio automatically handles the API calls.
 
-### b. Using `transformers.pipeline` for Local Hugging Face Models
+#### Using `transformers.pipeline` for Local Hugging Face Models
 
 If the model isn't supported by inference endpoints or local inference is required, Gradio can load a model using Hugging Face's `transformers` library and then wrap it in an interface.
 
@@ -112,7 +113,7 @@ demo.launch()
   * Define a Python function (`generate_text` in this case) that calls your `pipe` object.
   * Pass this function to `gr.Interface`.
 
-### c. Using `gr.Interface.from_pipeline` (Shorthand for `transformers.pipeline`)
+#### Using `gr.Interface.from_pipeline` (Shorthand for `transformers.pipeline`)
 Gradio provides a convenient shorthand for `transformers.pipeline` objects.
 
 ```python
@@ -127,11 +128,11 @@ demo = gr.Interface.from_pipeline(pipe)
 demo.launch()
 ```
 
-## Using LLMs via External APIs (e.g., OpenAI, Google Gemini, Anthropic)
+#### Using LLMs via External APIs (e.g., OpenAI, Google Gemini, Anthropic)
 
 For commercial or hosted LLMs, you'll typically interact with their APIs using their respective Python SDKs.
 
-### Example with OpenAI API
+**Example with OpenAI API**
 
 ```python
 import gradio as gr
@@ -176,7 +177,7 @@ demo.launch()
   * For chatbots, `gr.ChatInterface` is very convenient as it handles the chat history and UI elements automatically.
   * The `yield` keyword is used for streaming responses, which provides a better user experience for LLMs.
 
-#### Example with Google Gemini API
+**Example with Google Gemini API**
 
 The structure would be similar, just using the `google.generativeai` library instead of `openai`.
 
@@ -209,7 +210,7 @@ demo = gr.ChatInterface(
 demo.launch()
 ```
 
-## Using Locally Trained LLMs or Custom Python Functions
+#### Using Locally Trained LLMs or Custom Python Functions
 
 If you have your own Python function that performs an LLM-like task (even if it's not a "traditional" LLM, but a text-processing function), you can use Gradio for it.
 
@@ -232,11 +233,11 @@ demo.launch()
   * You define your Python function (`simple_echo_llm`).
   * You pass this function directly to `gr.Interface` (or `gr.ChatInterface` if it's a conversational model).
 
-## Integrating with Frameworks like LangChain or LlamaIndex
+#### Integrating with Frameworks like LangChain or LlamaIndex
 
 Frameworks like LangChain and LlamaIndex provide abstractions for building complex LLM applications (agents, RAG, etc.). You can integrate these within your Gradio function.
 
-### Example with LangChain
+**Example with LangChain**
 
 ```python
 import gradio as gr
@@ -272,24 +273,24 @@ demo.launch()
   * You initialize your LangChain `model` or `chain`.
   * Your Gradio function wraps the LangChain call, handling the conversion of input/output formats.
 
-## Choosing Your Backend: Key Considerations
+### Choosing Your Backend: Key Considerations
 
-### 1. Ease of Use/Quick Demo
+* **1. Ease of Use/Quick Demo**
 
       * `gr.load()` for Hugging Face Inference Endpoints is the fastest way to get a demo running for many common models.
       * `gr.Interface.from_pipeline()` for `transformers` pipelines is also very quick for local models.
 
-### 2. Specific Model Requirements
+* **2. Specific Model Requirements**
 
       * If you need a very specific LLM (e.g., a commercial one like GPT-4o, Claude 3.5 Sonnet, or Gemini 1.5 Pro), you'll use their **API/SDK**.
       * If you're fine-tuning or experimenting with a Hugging Face model locally, using `transformers.pipeline` directly gives you the most control.
 
-### 3. Local vs. Cloud/API
+* **3. Local vs. Cloud/API**
 
       * **Local Models:** Run on your machine, require setup (dependencies, model weights), and leverage your local hardware (CPU/GPU). Good for privacy, cost control (after initial setup), and custom models.
       * **Cloud/API Models:** Managed by a provider, require an API key and internet access. Easier to get started, scalable, but incurs usage costs and sends data to a third party.
 
-### 4. Complex LLM Applications
+* **4. Complex LLM Applications**
 
       * If you're building sophisticated applications involving retrieval-augmented generation (RAG), agents, tool use, etc., **LangChain or LlamaIndex** are excellent choices to manage the complexity. You'll then integrate these frameworks into your Gradio function.
 
