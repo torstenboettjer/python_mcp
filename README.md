@@ -300,7 +300,10 @@ If you're building sophisticated applications involving retrieval-augmented gene
 
 ### Sources
 
-* [MCP CLI on GitHub](https://github.com/adhikasp/mcp-client-cli)
+* [FastMCP on GitHub](https://github.com/jlowin/fastmcp)
+* [Gradio on GitHub](https://github.com/gradio-app/gradio)
+* [Gradio Homepage](https://www.gradio.app/)
+
 
 ### Tools
 
