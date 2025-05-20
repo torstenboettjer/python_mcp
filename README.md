@@ -46,10 +46,10 @@ python --version && uv --version
 pip show gradio
 ```
 
-Update gradio to the latest version
+At time of testing the gradio and mcp packages for NixOS where out of date, if necessary update gradio and mcp to the latest version
 
 ```sh
-pip install --upgrade gradio
+pip install --upgrade gradio && pip install --upgrade mcp
 ```
 
 Add the dotfiles to `.gitignore`
@@ -63,7 +63,7 @@ echo -e ".envrc" >> .gitignore
 ### MCP inspector
 
 ```sh
-mcp dev server.py
+mcp dev demo_fastmcp.py
 ```
 
 ## Gradio
