@@ -17,9 +17,9 @@ env.GREET = "MCP Prototype";
 
 # https://devenv.sh/packages/
 packages = with pkgs; [
-nodejs
-python313Packages.gradio
-python313Packages.mcp
+  nodejs
+  python313Packages.gradio
+  python313Packages.mcp
 ];
 ```
 
@@ -60,7 +60,7 @@ echo -e ".envrc" >> .gitignore
 
 ## FastMCP
 
-### MCP inspector
+FastMCP is a Python library that significantly simplifies the creation and interaction with Model Context Protocol (MCP) servers and clients. `demo_fastmcp.py` is the demo example from the huggingface tutorial. Starting the example with the MCP inspector
 
 ```sh
 mcp dev demo_fastmcp.py
@@ -172,9 +172,10 @@ demo = gr.ChatInterface(
 demo.launch()
 ```
 
-  * You import the `OpenAI` library.
-  * You initialize the client with your API key (stored securely).
-  * Your `chat_with_gpt` function constructs the API call, sends the request, and processes the response.
+What this code does:
+  * Import the `OpenAI` library.
+  * Initialize the client with your API key (stored securely).
+  * The `chat_with_gpt` function constructs the API call, sends the request, and processes the response.
   * For chatbots, `gr.ChatInterface` is very convenient as it handles the chat history and UI elements automatically.
   * The `yield` keyword is used for streaming responses, which provides a better user experience for LLMs.
 
@@ -231,8 +232,10 @@ demo = gr.Interface(
 demo.launch()
 ```
 
-  * You define your Python function (`simple_echo_llm`).
-  * You pass this function directly to `gr.Interface` (or `gr.ChatInterface` if it's a conversational model).
+What this code does:
+
+  * Define a Python function (`simple_echo_llm`).
+  * Pass this function directly to `gr.Interface` (or `gr.ChatInterface` if it's a conversational model).
 
 ### Integrating with Frameworks like LangChain or LlamaIndex
 
@@ -270,11 +273,13 @@ demo = gr.ChatInterface(
 demo.launch()
 ```
 
-  * You import necessary components from LangChain.
-  * You initialize your LangChain `model` or `chain`.
-  * Your Gradio function wraps the LangChain call, handling the conversion of input/output formats.
+What this code does:
 
-### Choosing Your Backend: Key Considerations
+  * Import necessary components from LangChain.
+  * Initialize your LangChain `model` or `chain`.
+  * The Gradio function wraps the LangChain call, handling the conversion of input/output formats.
+
+### Considerations when Choosing a Backend
 
 #### 1. Ease of Use/Quick Demo
 
@@ -283,17 +288,17 @@ demo.launch()
 
 #### 2. Specific Model Requirements
 
-* If you need a very specific LLM (e.g., a commercial one like GPT-4o, Claude 3.5 Sonnet, or Gemini 1.5 Pro), you'll use their **API/SDK**.
-* If you're fine-tuning or experimenting with a Hugging Face model locally, using `transformers.pipeline` directly gives you the most control.
+* For a specific LLM (e.g., a commercial one like GPT-4o, Claude 3.5 Sonnet, or Gemini 1.5 Pro), use the **API/SDK**.
+* To fine-tuning or experimenting with a Hugging Face model locally, using `transformers.pipeline` directly gives the most control.
 
 #### 3. Local vs. Cloud/API
 
-* **Local Models:** Run on your machine, require setup (dependencies, model weights), and leverage your local hardware (CPU/GPU). Good for privacy, cost control (after initial setup), and custom models.
+* **Local Models:** Run on a local machine, require setup (dependencies, model weights), and leverage the local hardware (CPU/GPU). Good for privacy, cost control (after initial setup), and custom models.
 * **Cloud/API Models:** Managed by a provider, require an API key and internet access. Easier to get started, scalable, but incurs usage costs and sends data to a third party.
 
 #### 4. Complex LLM Applications
 
-If you're building sophisticated applications involving retrieval-augmented generation (RAG), agents, tool use, etc., **LangChain or LlamaIndex** are excellent choices to manage the complexity. You'll then integrate these frameworks into your Gradio function.
+Building sophisticated applications involving retrieval-augmented generation (RAG), agents, tool use, etc., **LangChain or LlamaIndex** are potential choices to manage the complexity. These frameworks can be integrated into Gradio functions.
 
 
 ## Links
