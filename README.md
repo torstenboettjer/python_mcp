@@ -47,55 +47,253 @@ python --version && uv --version
 pip show gradio
 ```
 
+Update gradio to the latest version
+
+```sh
+pip install --upgrade gradio
+```
+
 Add the dotfiles to `.gitignore`
 
 ```sh
 echo -e ".envrc" >> .gitignore
 ```
 
-## Setup
-
-Create a `~/.llm/config.json` file to configure your LLM and MCP servers
-
-```sh{
-  "systemPrompt": "You are an AI assistant helping a software engineer...",
-  "llm": {
-    "provider": "openai",
-    "model": "gpt-4",
-    "api_key": "your-openai-api-key",
-    "temperature": 0.7,
-    "base_url": "https://api.openai.com/v1"  // Optional, for OpenRouter or other providers
-  },
-  "mcpServers": {
-    "fetch": {
-      "command": "uvx",
-      "args": ["mcp-server-fetch"],
-      "requires_confirmation": ["fetch"],
-      "enabled": true,  // Optional, defaults to true
-      "exclude_tools": []  // Optional, list of tool names to exclude
-    },
-    "brave-search": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
-      "env": {
-        "BRAVE_API_KEY": "your-brave-api-key"
-      },
-      "requires_confirmation": ["brave_web_search"]
-    },
-    "youtube": {
-      "command": "uvx",
-      "args": ["--from", "git+https://github.com/adhikasp/mcp-youtube", "mcp-youtube"]
-    }
-  }
-}
-```
-
-## Run the CLI
+## Run MCP inspector
 
 ```sh
-llm "What is the capital city of North Sumatra?"
+mcp dev server.py
 ```
 
+## Hugging Face Models
+
+Hugging Face is a resource for pre-trained LLMs. Gradio offers several ways to integrate with them:
+
+### a. Using `gr.load()` for Hugging Face Inference Endpoints
+
+This is the **easiest and often recommended way** if the model is available on the Hugging Face Hub and supports inference endpoints, not need to download the model locally.
+
+```python
+import gradio as gr
+
+# Load a translation model from Hugging Face Inference Endpoints
+demo = gr.load("Helsinki-NLP/opus-mt-en-es", src="models")
+demo.launch()
+```
+
+  * `"Helsinki-NLP/opus-mt-en-es"` is the model ID on Hugging Face.
+  * `src="models"` tells Gradio to look for this model on the Hugging Face Model Hub and use its inference endpoint. Gradio automatically handles the API calls.
+
+### b. Using `transformers.pipeline` for Local Hugging Face Models
+
+If the model isn't supported by inference endpoints or local inference is required, Gradio can load a model using Hugging Face's `transformers` library and then wrap it in an interface.
+
+```python
+import gradio as gr
+from transformers import pipeline
+
+# Load a local text generation pipeline
+# Make sure you have the model downloaded or it will download on first run
+pipe = pipeline("text-generation", model="distilgpt2")
+
+def generate_text(prompt):
+    return pipe(prompt, max_new_tokens=50)[0]["generated_text"]
+
+demo = gr.Interface(
+    fn=generate_text,
+    inputs="text",
+    outputs="text",
+    title="DistilGPT2 Text Generator"
+)
+demo.launch()
+```
+
+  * Create a `pipeline` object from `transformers`.
+  * Define a Python function (`generate_text` in this case) that calls your `pipe` object.
+  * Pass this function to `gr.Interface`.
+
+### c. Using `gr.Interface.from_pipeline` (Shorthand for `transformers.pipeline`)
+Gradio provides a convenient shorthand for `transformers.pipeline` objects.
+
+```python
+import gradio as gr
+from transformers import pipeline
+
+# Load a local text generation pipeline
+pipe = pipeline("text-generation", model="distilgpt2")
+
+# Directly create an Interface from the pipeline
+demo = gr.Interface.from_pipeline(pipe)
+demo.launch()
+```
+
+## Using LLMs via External APIs (e.g., OpenAI, Google Gemini, Anthropic)
+
+For commercial or hosted LLMs, you'll typically interact with their APIs using their respective Python SDKs.
+
+### Example with OpenAI API
+
+```python
+import gradio as gr
+from openai import OpenAI
+import os
+
+# Set your OpenAI API key (replace with your actual key or load from env)
+# It's best practice to use environment variables for API keys
+os.environ["OPENAI_API_KEY"] = "YOUR_OPENAI_API_KEY"
+client = OpenAI() # Initialize OpenAI client
+
+def chat_with_gpt(message, history):
+    # Convert Gradio chat history format to OpenAI format
+    messages = []
+    for human, assistant in history:
+        messages.append({"role": "user", "content": human})
+        messages.append({"role": "assistant", "content": assistant})
+    messages.append({"role": "user", "content": message})
+
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo", # Or "gpt-4", "gpt-4o", etc.
+        messages=messages,
+        stream=True # For streaming responses in Gradio
+    )
+
+    partial_message = ""
+    for chunk in response:
+        if chunk.choices[0].delta.content is not None:
+            partial_message += chunk.choices[0].delta.content
+            yield partial_message # Yield partial responses for streaming UI
+
+demo = gr.ChatInterface(
+    fn=chat_with_gpt,
+    title="ChatGPT Chatbot"
+)
+demo.launch()
+```
+
+  * You import the `OpenAI` library.
+  * You initialize the client with your API key (stored securely).
+  * Your `chat_with_gpt` function constructs the API call, sends the request, and processes the response.
+  * For chatbots, `gr.ChatInterface` is very convenient as it handles the chat history and UI elements automatically.
+  * The `yield` keyword is used for streaming responses, which provides a better user experience for LLMs.
+
+#### Example with Google Gemini API
+
+The structure would be similar, just using the `google.generativeai` library instead of `openai`.
+
+```python
+import gradio as gr
+import google.generativeai as genai
+import os
+
+# Set your Google API key (replace with your actual key or load from env)
+os.environ["GEMINI_API_KEY"] = "YOUR_GEMINI_API_KEY"
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+
+model = genai.GenerativeModel('gemini-pro')
+
+def chat_with_gemini(message, history):
+    # Convert Gradio chat history format to Gemini format
+    # Gemini's history format is slightly different
+    # You might need to adjust this based on the specific model and its requirements
+    convo = model.start_chat(history=[]) # Start a new conversation for each call for simplicity, or manage history
+
+    # You would typically convert the full history and pass it to the model
+    # For a simple example, let's just send the current message
+    response = convo.send_message(message)
+    return response.text
+
+demo = gr.ChatInterface(
+    fn=chat_with_gemini,
+    title="Gemini Chatbot"
+)
+demo.launch()
+```
+
+## Using Locally Trained LLMs or Custom Python Functions
+
+If you have your own Python function that performs an LLM-like task (even if it's not a "traditional" LLM, but a text-processing function), you can use Gradio for it.
+
+```python
+import gradio as gr
+
+def simple_echo_llm(text_input):
+    """A very basic 'LLM' that just echoes the input with a prefix."""
+    return "You said: " + text_input.upper() + "!"
+
+demo = gr.Interface(
+    fn=simple_echo_llm,
+    inputs="text",
+    outputs="text",
+    title="Simple Echo LLM Demo"
+)
+demo.launch()
+```
+
+  * You define your Python function (`simple_echo_llm`).
+  * You pass this function directly to `gr.Interface` (or `gr.ChatInterface` if it's a conversational model).
+
+## Integrating with Frameworks like LangChain or LlamaIndex
+
+Frameworks like LangChain and LlamaIndex provide abstractions for building complex LLM applications (agents, RAG, etc.). You can integrate these within your Gradio function.
+
+### Example with LangChain
+
+```python
+import gradio as gr
+from langchain_openai import ChatOpenAI
+from langchain.schema import HumanMessage, AIMessage
+import os
+
+# Set your OpenAI API key
+os.environ["OPENAI_API_KEY"] = "YOUR_OPENAI_API_KEY"
+
+model = ChatOpenAI(model="gpt-3.5-turbo") # Initialize LangChain LLM
+
+def langchain_chat(message, history):
+    # Convert Gradio history to LangChain's message format
+    langchain_history = []
+    for user_msg, ai_msg in history:
+        langchain_history.append(HumanMessage(content=user_msg))
+        langchain_history.append(AIMessage(content=ai_msg))
+    langchain_history.append(HumanMessage(content=message))
+
+    # Invoke the LangChain model
+    response = model.invoke(langchain_history)
+    return response.content
+
+demo = gr.ChatInterface(
+    fn=langchain_chat,
+    title="LangChain Chatbot"
+)
+demo.launch()
+```
+
+  * You import necessary components from LangChain.
+  * You initialize your LangChain `model` or `chain`.
+  * Your Gradio function wraps the LangChain call, handling the conversion of input/output formats.
+
+## Choosing Your Backend: Key Considerations
+
+### 1. Ease of Use/Quick Demo
+
+      * `gr.load()` for Hugging Face Inference Endpoints is the fastest way to get a demo running for many common models.
+      * `gr.Interface.from_pipeline()` for `transformers` pipelines is also very quick for local models.
+
+### 2. Specific Model Requirements
+
+      * If you need a very specific LLM (e.g., a commercial one like GPT-4o, Claude 3.5 Sonnet, or Gemini 1.5 Pro), you'll use their **API/SDK**.
+      * If you're fine-tuning or experimenting with a Hugging Face model locally, using `transformers.pipeline` directly gives you the most control.
+
+### 3. Local vs. Cloud/API
+
+      * **Local Models:** Run on your machine, require setup (dependencies, model weights), and leverage your local hardware (CPU/GPU). Good for privacy, cost control (after initial setup), and custom models.
+      * **Cloud/API Models:** Managed by a provider, require an API key and internet access. Easier to get started, scalable, but incurs usage costs and sends data to a third party.
+
+### 4. Complex LLM Applications
+
+      * If you're building sophisticated applications involving retrieval-augmented generation (RAG), agents, tool use, etc., **LangChain or LlamaIndex** are excellent choices to manage the complexity. You'll then integrate these frameworks into your Gradio function.
+
+In summary, Gradio's power lies in its ability to be a flexible UI layer for *any* Python function, and that Python function can be an interface to a Hugging Face model, a third-party API, a custom-trained model, or an entire LLM framework.
 
 ## Links
 

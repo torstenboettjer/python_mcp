@@ -7,8 +7,8 @@
   # https://devenv.sh/packages/
   packages = with pkgs; [
     nodejs
-    python313Packages.gradio
-    python313Packages.mcp
+    #python313Packages.gradio
+    #python313Packages.mcp
   ];
 
   # https://devenv.sh/languages/
