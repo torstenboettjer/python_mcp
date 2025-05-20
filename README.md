@@ -300,6 +300,9 @@ If you're building sophisticated applications involving retrieval-augmented gene
 
 ### Sources
 
+* [MCP Specification](https://modelcontextprotocol.io/)
+* [Antrophic MCP Quickstart](https://modelcontextprotocol.io/quickstart/server)
+* [Huggingface MCP Tutorial](https://huggingface.co/learn/mcp-course/unit1/sdk)
 * [FastMCP on GitHub](https://github.com/jlowin/fastmcp)
 * [Gradio on GitHub](https://github.com/gradio-app/gradio)
 * [Gradio Homepage](https://www.gradio.app/)
