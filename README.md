@@ -1,5 +1,6 @@
-# MCP Server in Python
-This repo provides a Python based prototype for a MCP server on NixOS. It relies on the [automatic shell activation](https://devenv.sh/automatic-shell-activation/) with devenv.sh and direnv.
+# Prototyping a MCP Server on NixOS (using Gradio)
+
+This repo provides tools and explanations to build a MCP server with Gradio, a NodeJS/Python framework, on NixOS. Python virtual environments rely on the [automatic shell activation](https://devenv.sh/automatic-shell-activation/) with devenv.sh and direnv.
 
 ## Prepare a Repository
 
@@ -58,7 +59,7 @@ Add the dotfiles to `.gitignore`
 echo -e ".envrc" >> .gitignore
 ```
 
-## FastMCP
+## Initial test with FastMCP
 
 FastMCP is a Python library that significantly simplifies the creation and interaction with Model Context Protocol (MCP) servers and clients. `demo_fastmcp.py` is the demo example from the huggingface tutorial. Starting the example with the MCP inspector
 
@@ -68,7 +69,7 @@ mcp dev demo_fastmcp.py
 
 ## Gradio
 
-Gradio is a flexible UI layer for Python functions. It can be used as an interface to third-party API (e.g. OpenAI), LLM frameworks, custom-trained models or Hugging Face models. Hugging Face is a platform to publish and consume pre-trained LLMs. Gradio offers several ways to integrate with them:
+Gradio is a UI layer for Python functions, it provides an interface to third-party API (e.g. OpenAI), LLM frameworks, custom-trained models or Hugging Face models. Hugging Face is a platform to publish and consume pre-trained LLMs. Gradio offers several ways to integrate with LLMs:
 
 ### Hugging Face Inference Endpoints
 
