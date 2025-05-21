@@ -59,7 +59,7 @@ Add the dotfiles to `.gitignore`
 echo -e ".envrc" >> .gitignore
 ```
 
-## MCP inspector
+## Testing and Debugging
 
 MCP Inspector is a developer tool for testing and debugging MCP servers. The functionality can be demonstrated with a small demo server. `demo_fastmcp.py` is the demo example from the huggingface tutorial, using the FastMCP framework to increase the readability of the code. FastMCP is a Python library that simplifies the creation and interaction with Model Context Protocol (MCP) servers and clients. 
 
