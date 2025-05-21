@@ -2,7 +2,7 @@
 
 This repo provides tools and explanations to build a MCP server with Gradio, a NodeJS/Python framework, on NixOS. Python virtual environments rely on the [automatic shell activation](https://devenv.sh/automatic-shell-activation/) with devenv.sh and direnv.
 
-## Prepare a Repository
+## Development Environment
 
 Create a repository on github, clone the it into a local folder. Within the local folder prepare the devevlopment environment
 
