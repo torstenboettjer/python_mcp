@@ -59,15 +59,15 @@ Add the dotfiles to `.gitignore`
 echo -e ".envrc" >> .gitignore
 ```
 
-## Initial test with FastMCP
+## MCP inspector
 
-FastMCP is a Python library that significantly simplifies the creation and interaction with Model Context Protocol (MCP) servers and clients. `demo_fastmcp.py` is the demo example from the huggingface tutorial. Starting the example with the MCP inspector
+MCP Inspector is a developer tool for testing and debugging MCP servers. The functionality can be demonstrated with a small demo server. `demo_fastmcp.py` is the demo example from the huggingface tutorial, using the FastMCP framework to increase the readability of the code. FastMCP is a Python library that simplifies the creation and interaction with Model Context Protocol (MCP) servers and clients. 
 
 ```sh
 mcp dev demo_fastmcp.py
 ```
 
-## Gradio
+## Building a Server with Gradio
 
 Gradio is a UI layer for Python functions, it provides an interface to third-party API (e.g. OpenAI), LLM frameworks, custom-trained models or Hugging Face models. Hugging Face is a platform to publish and consume pre-trained LLMs. Gradio offers several ways to integrate with LLMs:
 
