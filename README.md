@@ -71,64 +71,6 @@ mcp dev demo_fastmcp.py
 
 Gradio is a UI layer for Python functions, it provides an interface to third-party API (e.g. OpenAI), LLM frameworks, custom-trained models or Hugging Face models. Hugging Face is a platform to publish and consume pre-trained LLMs. Gradio offers several ways to integrate with LLMs:
 
-### Hugging Face Inference Endpoints
-
-Using `gr.load()` is the **easiest and often recommended way** if the model is available on the Hugging Face Hub and supports inference endpoints, not need to download the model locally.
-
-```python
-import gradio as gr
-
-# Load a translation model from Hugging Face Inference Endpoints
-demo = gr.load("Helsinki-NLP/opus-mt-en-es", src="models")
-demo.launch()
-```
-
-  * `"Helsinki-NLP/opus-mt-en-es"` is the model ID on Hugging Face.
-  * `src="models"` tells Gradio to look for this model on the Hugging Face Model Hub and use its inference endpoint. Gradio automatically handles the API calls.
-
-### Local Hugging Face Models
-
-If the model isn't supported by inference endpoints or local inference is required, Using `transformers.pipeline`, Gradio can load a model using Hugging Face's `transformers` library and then wrap it in an interface.
-
-```python
-import gradio as gr
-from transformers import pipeline
-
-# Load a local text generation pipeline
-# Make sure you have the model downloaded or it will download on first run
-pipe = pipeline("text-generation", model="distilgpt2")
-
-def generate_text(prompt):
-    return pipe(prompt, max_new_tokens=50)[0]["generated_text"]
-
-demo = gr.Interface(
-    fn=generate_text,
-    inputs="text",
-    outputs="text",
-    title="DistilGPT2 Text Generator"
-)
-demo.launch()
-```
-
-  * Create a `pipeline` object from `transformers`.
-  * Define a Python function (`generate_text` in this case) that calls your `pipe` object.
-  * Pass this function to `gr.Interface`.
-
-### Transformer Pipeline
-
-Using `gr.Interface.from_pipeline`, Gradio provides a convenient shorthand for `transformers.pipeline` objects.
-
-```python
-import gradio as gr
-from transformers import pipeline
-
-# Load a local text generation pipeline
-pipe = pipeline("text-generation", model="distilgpt2")
-
-# Directly create an Interface from the pipeline
-demo = gr.Interface.from_pipeline(pipe)
-demo.launch()
-```
 
 ### External APIs (e.g., OpenAI, Google Gemini, Anthropic)
 
@@ -210,6 +152,65 @@ demo = gr.ChatInterface(
     fn=chat_with_gemini,
     title="Gemini Chatbot"
 )
+demo.launch()
+```
+
+### Hugging Face Inference Endpoints
+
+Using `gr.load()` is the **easiest and often recommended way** if the model is available on the Hugging Face Hub and supports inference endpoints, not need to download the model locally.
+
+```python
+import gradio as gr
+
+# Load a translation model from Hugging Face Inference Endpoints
+demo = gr.load("Helsinki-NLP/opus-mt-en-es", src="models")
+demo.launch()
+```
+
+  * `"Helsinki-NLP/opus-mt-en-es"` is the model ID on Hugging Face.
+  * `src="models"` tells Gradio to look for this model on the Hugging Face Model Hub and use its inference endpoint. Gradio automatically handles the API calls.
+
+### Local Hugging Face Models
+
+If the model isn't supported by inference endpoints or local inference is required, Using `transformers.pipeline`, Gradio can load a model using Hugging Face's `transformers` library and then wrap it in an interface.
+
+```python
+import gradio as gr
+from transformers import pipeline
+
+# Load a local text generation pipeline
+# Make sure you have the model downloaded or it will download on first run
+pipe = pipeline("text-generation", model="distilgpt2")
+
+def generate_text(prompt):
+    return pipe(prompt, max_new_tokens=50)[0]["generated_text"]
+
+demo = gr.Interface(
+    fn=generate_text,
+    inputs="text",
+    outputs="text",
+    title="DistilGPT2 Text Generator"
+)
+demo.launch()
+```
+
+  * Create a `pipeline` object from `transformers`.
+  * Define a Python function (`generate_text` in this case) that calls your `pipe` object.
+  * Pass this function to `gr.Interface`.
+
+### Transformer Pipeline
+
+Using `gr.Interface.from_pipeline`, Gradio provides a convenient shorthand for `transformers.pipeline` objects.
+
+```python
+import gradio as gr
+from transformers import pipeline
+
+# Load a local text generation pipeline
+pipe = pipeline("text-generation", model="distilgpt2")
+
+# Directly create an Interface from the pipeline
+demo = gr.Interface.from_pipeline(pipe)
 demo.launch()
 ```
 
