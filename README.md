@@ -67,7 +67,7 @@ MCP Inspector is a developer tool for testing and debugging MCP servers. The fun
 mcp dev demo_fastmcp.py
 ```
 
-## Building a Server with Gradio
+## Developing with Gradio
 
 Gradio is a UI layer for Python functions, it provides an interface to third-party API (e.g. OpenAI), LLM frameworks, custom-trained models or Hugging Face models. Hugging Face is a platform to publish and consume pre-trained LLMs. Gradio offers several ways to integrate with LLMs:
 
