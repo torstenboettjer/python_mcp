@@ -157,7 +157,7 @@ demo.launch()
 
 ### Hugging Face Inference Endpoints
 
-Using `gr.load()` is the **easiest and often recommended way** if the model is available on the Hugging Face Hub and supports inference endpoints, not need to download the model locally.
+Using `gr.load()` is an easy way to build a server with a model that is available on the Hugging Face Hub and supports endpoints.
 
 ```python
 import gradio as gr
@@ -167,12 +167,14 @@ demo = gr.load("Helsinki-NLP/opus-mt-en-es", src="models")
 demo.launch()
 ```
 
+What this code does:
+
   * `"Helsinki-NLP/opus-mt-en-es"` is the model ID on Hugging Face.
   * `src="models"` tells Gradio to look for this model on the Hugging Face Model Hub and use its inference endpoint. Gradio automatically handles the API calls.
 
 ### Local Hugging Face Models
 
-If the model isn't supported by inference endpoints or local inference is required, Using `transformers.pipeline`, Gradio can load a model using Hugging Face's `transformers` library and then wrap it in an interface.
+Models that doesn't support inference endpoints have to use a *transformers.pipeline*. Gradio can load models using Hugging Face's library to wrap it in an interface.
 
 ```python
 import gradio as gr
@@ -194,13 +196,15 @@ demo = gr.Interface(
 demo.launch()
 ```
 
+What this code does:
+
   * Create a `pipeline` object from `transformers`.
   * Define a Python function (`generate_text` in this case) that calls your `pipe` object.
   * Pass this function to `gr.Interface`.
 
 ### Transformer Pipeline
 
-Using `gr.Interface.from_pipeline`, Gradio provides a convenient shorthand for `transformers.pipeline` objects.
+In addition, Gradio provides a convenient shorthand for `transformers.pipeline` objects, using `gr.Interface.from_pipeline`.
 
 ```python
 import gradio as gr
